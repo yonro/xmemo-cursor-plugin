@@ -1,0 +1,14 @@
+---
+description: Use XMemo selectively for durable project continuity, verified checkpoints, and cross-agent handoffs.
+alwaysApply: true
+---
+
+# XMemo continuity policy
+
+- At the start of non-trivial work, recall XMemo context only when prior decisions, constraints, progress, or cross-agent work could materially affect the task.
+- Treat recalled memory as context to reconcile with the live workspace. Current user instructions and current verified evidence take precedence.
+- After a meaningful phase, blocker, interruption, or handoff, preserve one concise verified checkpoint with `update_state`; do not write a checkpoint every turn.
+- Store durable decisions, stable constraints, and reusable lessons separately from temporary working state.
+- Never save raw transcripts, secrets, credentials, private keys, speculative claims, hidden reasoning, or unapproved proposals as settled facts.
+- Preview consequential writes and require explicit confirmation for permanent deletion.
+- If XMemo is unavailable, continue safely and report that no durable update was made.

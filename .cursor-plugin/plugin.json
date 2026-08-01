@@ -1,0 +1,35 @@
+{
+  "name": "xmemo",
+  "displayName": "XMemo",
+  "version": "1.0.0",
+  "description": "Durable project memory, evidence-grounded planning, progress checkpoints, and cross-agent handoffs for Cursor.",
+  "author": {
+    "name": "Yonro",
+    "email": "support@xmemo.dev"
+  },
+  "publisher": "XMemo",
+  "homepage": "https://xmemo.dev/product/mcp",
+  "repository": "https://github.com/yonro/xmemo-cursor-plugin",
+  "license": "MIT",
+  "logo": "assets/logo.png",
+  "keywords": [
+    "xmemo",
+    "memory",
+    "mcp",
+    "project-memory",
+    "cross-agent",
+    "developer-tools"
+  ],
+  "category": "developer-tools",
+  "tags": [
+    "memory",
+    "planning",
+    "handoff",
+    "automation"
+  ],
+  "agents": "./agents/",
+  "skills": "./skills/",
+  "rules": "./rules/",
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": "./mcp.json"
+}

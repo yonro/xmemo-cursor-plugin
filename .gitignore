@@ -1,0 +1,17 @@
+.DS_Store
+Thumbs.db
+.env
+.env.*
+!.env.example
+*.log
+*.tmp
+*.swp
+*.zip
+*.sha256
+dist/
+node_modules/
+.cursor/hooks/state/
+.cursor/mcp.json
+coverage/
+__pycache__/
+.pytest_cache/
