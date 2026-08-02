@@ -1,7 +1,7 @@
 {
   "name": "xmemo",
   "displayName": "XMemo",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Durable project memory, evidence-grounded planning, progress checkpoints, and cross-agent handoffs for Cursor.",
   "author": {
     "name": "Yonro",

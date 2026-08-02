@@ -9,7 +9,7 @@
   <p>Recover decisions, preserve verified progress, review plans, and hand work across sessions without replaying chat history.</p>
 
   <p>
-    <img alt="Version" src="https://img.shields.io/badge/plugin-v1.0.0-8B5CF6?style=flat-square" />
+    <img alt="Version" src="https://img.shields.io/badge/plugin-v1.1.0-8B5CF6?style=flat-square" />
     <img alt="Hosted MCP" src="https://img.shields.io/badge/MCP-hosted-06B6D4?style=flat-square" />
     <img alt="OAuth" src="https://img.shields.io/badge/auth-OAuth%202.0-10B981?style=flat-square" />
     <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-111827?style=flat-square" /></a>
