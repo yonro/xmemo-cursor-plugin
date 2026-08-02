@@ -11,6 +11,8 @@ Cursor connects to `https://xmemo.dev/mcp` through interactive OAuth. The signed
 | Replace an active project checkpoint | `update_state` |
 | Recover a bounded context pack | `recall_context` |
 | Recover known project context | `get_project_context` |
+| Take over unfinished work across agents or sessions | `restore_restart_snapshot` |
+| Save a complete, optional handoff package | `create_restart_snapshot` |
 | Record a milestone or handoff | `record_event` |
 | Inspect project chronology | `get_timeline` |
 | Focused semantic search or direct memory lookup | `recall` |
