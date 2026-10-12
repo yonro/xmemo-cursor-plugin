@@ -35,6 +35,12 @@ if (portable.name !== manifest.name || portable.version !== manifest.version) {
 if (!portable.author?.url || portable.author.url !== "https://xmemo.dev") {
   errors.push("Portable author metadata must identify XMemo");
 }
+const cursorAuthorKeys = Object.keys(manifest.author ?? {});
+for (const key of cursorAuthorKeys) {
+  if (!["name", "email"].includes(key)) {
+    errors.push(`Cursor manifest author contains unsupported field: ${key}`);
+  }
+}
 if (!/^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$/.test(manifest.name ?? "")) {
   errors.push("Manifest name is not a valid Cursor plugin identifier");
 }
@@ -126,6 +132,9 @@ for (const file of walk(resolve(root, "rules"))) {
 }
 
 const readme = readFileSync(resolve(root, "README.md"), "utf8");
+if (!readme.includes(`plugin-v${manifest.version}-`)) {
+  errors.push(`README version badge must match manifest version ${manifest.version}`);
+}
 for (const link of readme.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
   const target = link[1];
   if (/^(?:https?:|mailto:|#)/.test(target)) continue;

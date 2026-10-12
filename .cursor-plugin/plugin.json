@@ -5,8 +5,7 @@
   "description": "Durable project memory, evidence-grounded planning, progress checkpoints, and cross-agent handoffs for Cursor.",
   "author": {
     "name": "XMemo",
-    "email": "support@xmemo.dev",
-    "url": "https://xmemo.dev"
+    "email": "support@xmemo.dev"
   },
   "publisher": "XMemo",
   "homepage": "https://xmemo.dev/product/mcp",

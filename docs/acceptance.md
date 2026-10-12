@@ -16,9 +16,9 @@ OAuth session.
 
 | Area | Status | Evidence |
 | --- | --- | --- |
-| Root Agent Plugins manifest | **VERIFIED** | `plugin.json` contains the canonical 1.0.0 schema, coherent metadata, and synchronized version `1.0.2`. |
-| Cursor manifest | **VERIFIED** | `.cursor-plugin/plugin.json` declares the Cursor components and the same name/version. |
-| Standard MCP declaration | **VERIFIED** | `mcp.json` uses the Agent Plugins MCP schema and `streamable-http` for `https://xmemo.dev/mcp`. |
+| Root Agent Plugins manifest | **VERIFIED** | `plugin.json` passes the canonical Agent Plugins 1.0.0 schema, contains coherent metadata, and has synchronized version `1.0.2`. |
+| Cursor manifest | **VERIFIED** | `.cursor-plugin/plugin.json` passes the official Cursor `schemas/plugin.schema.json` and declares the Cursor components with the same name/version. |
+| Standard MCP declaration | **VERIFIED** | `mcp.json` passes the official Agent Plugins MCP schema and uses `streamable-http` for `https://xmemo.dev/mcp`. |
 | Component discovery | **VERIFIED** | Nine Skills, two Agents, one Rule, one Hook, and one MCP server are present at declared paths. |
 | Static validator | **VERIFIED** | `node scripts/validate-plugin.mjs` passed. |
 | Checkpoint Hook | **VERIFIED** | `node --test scripts/checkpoint-hook.test.mjs` passed two tests; Hook is fail-open and uses Node.js without a Bun dependency. |
@@ -29,6 +29,7 @@ OAuth session.
 | Cursor memory read/write | **NOT RUN** | Requires an authenticated Cursor session and synthetic records. |
 | Cursor isolation/revocation/resume | **NOT RUN** | Requires Cursor-specific authenticated and multi-session evidence. |
 | Cursor Marketplace submission | **NOT SUBMITTED** | The package is ready for submission at `https://cursor.com/marketplace/publish` or the configured Cursor directory, pending owner review. |
+| Cursor release tag | **NOT RELEASED** | The current `1.0.2` commit is on `main`; the latest repository tag remains `v1.0.1`. |
 
 ## Reproducible checks
 
