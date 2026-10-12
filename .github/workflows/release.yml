@@ -15,7 +15,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: oven-sh/setup-bun@v2
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -25,7 +24,7 @@ jobs:
           VERSION="$(node -p "require('./.cursor-plugin/plugin.json').version")"
           test "${GITHUB_REF_NAME}" = "v${VERSION}"
           node scripts/validate-plugin.mjs
-          bun test scripts/checkpoint-hook.test.ts
+          node --test scripts/checkpoint-hook.test.mjs
           git archive --format=zip --output="xmemo-cursor-plugin-${VERSION}.zip" "${GITHUB_SHA}"
           sha256sum "xmemo-cursor-plugin-${VERSION}.zip" > "xmemo-cursor-plugin-${VERSION}.zip.sha256"
       - name: Publish GitHub Release

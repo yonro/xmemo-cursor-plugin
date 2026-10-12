@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.2
+
+- Add the root Agent Plugins 1.0.0 manifest for portable Open Plugins discovery.
+- Declare the canonical Agent Plugins Streamable HTTP MCP schema for XMemo.
+- Replace the Bun-only checkpoint Hook with a Node.js fail-open implementation and native Node test.
+- Validate portable and Cursor manifests, component paths, MCP schema fields, and synchronized versions.
+
 ## 1.0.1
 
 - Route cross-agent or cross-session takeovers to `restore_restart_snapshot`, and optional complete handoff packages to `create_restart_snapshot`.

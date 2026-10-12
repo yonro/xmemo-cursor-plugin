@@ -37,7 +37,8 @@ XMemo gives Cursor a private, user-controlled memory workspace for work that sho
 
 | Component | Purpose |
 |---|---|
-| `mcp.json` | Connects Cursor to `https://xmemo.dev/mcp`; Cursor handles interactive OAuth |
+| `plugin.json` + `.cursor-plugin/plugin.json` | Portable Agent Plugins metadata plus Cursor-specific components |
+| `mcp.json` | Declares the standard Streamable HTTP connection to `https://xmemo.dev/mcp`; Cursor handles interactive OAuth |
 | `skills/` | Nine focused professional workflows for recall, planning, review, progress, checkpointing, and handoff |
 | `agents/` | Independent context auditor and handoff curator |
 | `rules/` | Minimal always-on continuity and memory-safety policy |
@@ -89,10 +90,13 @@ See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md). XMemo's public priv
 
 ```bash
 node scripts/validate-plugin.mjs
-bun test scripts/checkpoint-hook.test.ts
+node --test scripts/checkpoint-hook.test.mjs
 ```
 
-Validation checks manifest structure, component discovery, frontmatter, MCP configuration, Hook behavior, local links, and common credential patterns.
+Validation checks both Open Plugins and Cursor manifests, component discovery, Agent Plugins MCP schema fields, frontmatter, Hook behavior, local links, and common credential patterns. The checkpoint Hook runs with Node.js and has no Bun runtime dependency.
+
+See [docs/acceptance.md](docs/acceptance.md) for the evidence matrix and the
+boundary between package validation and live Cursor OAuth/tool verification.
 
 ## Release policy
 

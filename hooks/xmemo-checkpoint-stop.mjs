@@ -6,34 +6,17 @@ import {
   writeFileSync,
 } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { stdin } from "bun";
 
 const STATE_PATH = resolve(".cursor/hooks/state/xmemo-checkpoint.json");
 const DEFAULT_MIN_TURNS = 6;
 const DEFAULT_MIN_MINUTES = 20;
 
-interface StopHookInput {
-  conversation_id: string;
-  generation_id?: string;
-  status: "completed" | "aborted" | "error" | string;
-  loop_count: number;
-  transcript_path?: string | null;
-}
-
-interface CheckpointState {
-  version: 1;
-  lastPromptAtMs: number;
-  turnsSincePrompt: number;
-  lastTranscriptMtimeMs: number | null;
-  lastGenerationId: string | null;
-}
-
-function positiveInt(name: string, fallback: number): number {
+function positiveInt(name, fallback) {
   const value = Number.parseInt(process.env[name] ?? "", 10);
   return Number.isFinite(value) && value > 0 ? value : fallback;
 }
 
-function emptyState(): CheckpointState {
+function emptyState() {
   return {
     version: 1,
     lastPromptAtMs: 0,
@@ -43,7 +26,7 @@ function emptyState(): CheckpointState {
   };
 }
 
-function loadState(): CheckpointState {
+function loadState() {
   if (!existsSync(STATE_PATH)) return emptyState();
   try {
     const parsed = JSON.parse(readFileSync(STATE_PATH, "utf8"));
@@ -53,12 +36,12 @@ function loadState(): CheckpointState {
   }
 }
 
-function saveState(state: CheckpointState): void {
+function saveState(state) {
   mkdirSync(dirname(STATE_PATH), { recursive: true });
   writeFileSync(STATE_PATH, `${JSON.stringify(state, null, 2)}\n`, "utf8");
 }
 
-function transcriptMtime(path: string | null | undefined): number | null {
+function transcriptMtime(path) {
   if (!path) return null;
   try {
     return statSync(path).mtimeMs;
@@ -67,9 +50,9 @@ function transcriptMtime(path: string | null | undefined): number | null {
   }
 }
 
-async function main(): Promise<number> {
+async function main() {
   try {
-    const input = JSON.parse(await stdin.text()) as StopHookInput;
+    const input = JSON.parse(await readStdin());
     const state = loadState();
 
     if (
@@ -78,7 +61,7 @@ async function main(): Promise<number> {
       (input.generation_id && input.generation_id === state.lastGenerationId)
     ) {
       console.log(JSON.stringify({}));
-      return 0;
+      return;
     }
 
     state.lastGenerationId = input.generation_id ?? null;
@@ -109,17 +92,26 @@ async function main(): Promise<number> {
             "Run the `xmemo-checkpoint` skill now. Preserve only material, verified project progress. If nothing durable changed or XMemo is unavailable, do not fabricate a save.",
         }),
       );
-      return 0;
+      return;
     }
 
     saveState(state);
     console.log(JSON.stringify({}));
-    return 0;
   } catch (error) {
     console.error("[xmemo-checkpoint] fail-open", error);
     console.log(JSON.stringify({}));
-    return 0;
   }
 }
 
-process.exit(await main());
+function readStdin() {
+  return new Promise((resolveInput) => {
+    let input = "";
+    process.stdin.setEncoding("utf8");
+    process.stdin.on("data", (chunk) => {
+      input += chunk;
+    });
+    process.stdin.on("end", () => resolveInput(input));
+  });
+}
+
+await main();

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "xmemo",
+  "version": "1.0.2",
+  "description": "User-controlled persistent memory and project continuity for AI agents.",
+  "author": {
+    "name": "XMemo",
+    "email": "support@xmemo.dev",
+    "url": "https://xmemo.dev"
+  },
+  "homepage": "https://xmemo.dev/product/mcp",
+  "repository": "https://github.com/yonro/xmemo-cursor-plugin",
+  "license": "MIT",
+  "keywords": [
+    "xmemo",
+    "memory",
+    "mcp",
+    "project-memory",
+    "cross-agent",
+    "developer-tools"
+  ]
+}

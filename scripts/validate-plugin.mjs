@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 const root = resolve(import.meta.dirname, "..");
 const errors = [];
 const required = [
+  "plugin.json",
   ".cursor-plugin/plugin.json",
   "mcp.json",
   "hooks/hooks.json",
@@ -21,6 +22,19 @@ for (const path of required) {
 const manifest = JSON.parse(
   readFileSync(resolve(root, ".cursor-plugin/plugin.json"), "utf8"),
 );
+const portable = JSON.parse(readFileSync(resolve(root, "plugin.json"), "utf8"));
+if (portable.$schema !== "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json") {
+  errors.push("Root plugin.json must target Agent Plugins 1.0.0");
+}
+for (const key of ["name", "version", "description", "author", "homepage", "repository", "license", "keywords"]) {
+  if (!(key in portable)) errors.push(`Portable manifest missing ${key}`);
+}
+if (portable.name !== manifest.name || portable.version !== manifest.version) {
+  errors.push("Portable and Cursor manifests must share name and version");
+}
+if (!portable.author?.url || portable.author.url !== "https://xmemo.dev") {
+  errors.push("Portable author metadata must identify XMemo");
+}
 if (!/^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$/.test(manifest.name ?? "")) {
   errors.push("Manifest name is not a valid Cursor plugin identifier");
 }
@@ -33,8 +47,14 @@ for (const key of ["displayName", "description", "author", "repository", "licens
 
 const mcp = JSON.parse(readFileSync(resolve(root, "mcp.json"), "utf8"));
 const xmemo = mcp?.mcpServers?.xmemo;
-if (xmemo?.type !== "http" || xmemo?.url !== "https://xmemo.dev/mcp") {
-  errors.push("mcp.json must declare the hosted XMemo HTTP endpoint");
+if (mcp.$schema !== "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json") {
+  errors.push("mcp.json must target Agent Plugins MCP 1.0.0");
+}
+if (xmemo?.type !== "streamable-http" || xmemo?.url !== "https://xmemo.dev/mcp") {
+  errors.push("mcp.json must declare the hosted XMemo Streamable HTTP endpoint");
+}
+if (Object.keys(mcp.mcpServers ?? {}).length !== 1) {
+  errors.push("mcp.json must declare exactly one MCP server");
 }
 
 function walk(directory) {
@@ -87,6 +107,24 @@ for (const name of skillDirectories) {
   if (!match[1].includes(`name: ${name}`)) errors.push(`Skill folder/name mismatch for ${name}`);
 }
 
+for (const file of walk(resolve(root, "agents"))) {
+  if (!/\.md$/i.test(file)) continue;
+  const content = readFileSync(file, "utf8");
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match || !/^name:\s+\S+/m.test(match[1]) || !/^description:\s+\S+/m.test(match[1])) {
+    errors.push(`Agent is missing name/description frontmatter: ${file}`);
+  }
+}
+
+for (const file of walk(resolve(root, "rules"))) {
+  if (!/\.(?:md|mdc|markdown)$/i.test(file)) continue;
+  const content = readFileSync(file, "utf8");
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match || !/^description:\s+\S+/m.test(match[1])) {
+    errors.push(`Rule is missing description frontmatter: ${file}`);
+  }
+}
+
 const readme = readFileSync(resolve(root, "README.md"), "utf8");
 for (const link of readme.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
   const target = link[1];
@@ -98,4 +136,21 @@ if (errors.length) {
   console.error(errors.map((error) => `ERROR: ${error}`).join("\n"));
   process.exit(1);
 }
-console.log(`OK: XMemo Cursor plugin ${manifest.version}; ${skillDirectories.length} Skills; no secret patterns found.`);
+for (const [key, value] of Object.entries({
+  agents: manifest.agents,
+  skills: manifest.skills,
+  rules: manifest.rules,
+  hooks: manifest.hooks,
+  mcpServers: manifest.mcpServers,
+})) {
+  const paths = Array.isArray(value) ? value : [value];
+  for (const path of paths) {
+    if (typeof path !== "string" || path.startsWith("/") || path.includes("..")) {
+      throw new Error(`Manifest ${key} path must be relative and contained: ${path}`);
+    }
+    if (!existsSync(resolve(root, path))) {
+      throw new Error(`Manifest ${key} path does not exist: ${path}`);
+    }
+  }
+}
+console.log(`OK: XMemo Cursor plugin ${manifest.version}; portable manifest, ${skillDirectories.length} Skills, standard MCP, and no secret patterns found.`);
